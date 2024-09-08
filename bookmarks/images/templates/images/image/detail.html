@@ -15,6 +15,9 @@
           <span class="total">{{ total_likes }}</span>
           like{{ total_likes|pluralize }}
         </span>
+        <span class="count">
+          {{ total_views }} view{{ total_views|pluralize }}
+        </span>
         <a href="#" data-id="{{ image.id }}" data-action="{% if request.user in users_like %}un{% endif %}like"
     class="like button">
           {% if request.user not in users_like %}
@@ -54,13 +57,13 @@
     e.preventDefault();
     var likeButton = this;
 
-    // добавить тело запроса
+    // add request body
     var formData = new FormData();
     formData.append('id', likeButton.dataset.id);
     formData.append('action', likeButton.dataset.action);
     options['body'] = formData;
 
-    // отправить HTTP-запрос
+    // send HTTP request
     fetch(url, options)
     .then(response => response.json())
     .then(data => {
@@ -68,12 +71,12 @@
       {
         var previousAction = likeButton.dataset.action;
 
-        // переключить текст кнопки и атрибут data-action
+        // toggle button text and data-action
         var action = previousAction === 'like' ? 'unlike' : 'like';
         likeButton.dataset.action = action;
         likeButton.innerHTML = action;
 
-        // обновить колличество лайков
+        // update like count
         var likeCount = document.querySelector('span.count .total');
         var totalLikes = parseInt(likeCount.innerHTML);
         likeCount.innerHTML = previousAction === 'like' ? totalLikes + 1 : totalLikes - 1;
